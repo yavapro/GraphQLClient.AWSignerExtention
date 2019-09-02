@@ -1,1 +1,1 @@
-# GraphQLClient.AWSignerExtention
+# GraphQLClient.Extentions
