@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>GraphQLClient.AWSignerExtention</RootNamespace>
-        <PackageVersion>0.0.5</PackageVersion>
+        <PackageVersion>0.0.6</PackageVersion>
         <Title>GraphQLClient.AWSExtentions</Title>
         <Authors>Vladimir Yarovenko &lt;yavapro@gmail.com&gt;</Authors>
         <Description>GraphQLClient for aws server with ami authorization</Description>

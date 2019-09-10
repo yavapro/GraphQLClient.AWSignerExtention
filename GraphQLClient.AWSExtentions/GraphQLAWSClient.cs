@@ -79,7 +79,11 @@ namespace GraphQLClient.AWSExtentions
         private async Task<GraphQLResponse> ReadHttpResponseMessageAsync(
             HttpResponseMessage httpResponseMessage)
         {
-            GraphQLResponse graphQlResponse;
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                throw new GraphQLHttpException(httpResponseMessage);
+            }
+
             using (Stream stream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
             {
                 using (StreamReader streamReader = new StreamReader(stream))
@@ -90,24 +94,11 @@ namespace GraphQLClient.AWSExtentions
                         {
                             ContractResolver = this.options.JsonSerializerSettings.ContractResolver
                         };
-                        try
-                        {
-                            graphQlResponse = jsonSerializer.Deserialize<GraphQLResponse>(jsonTextReader);
-                        }
-                        catch (JsonReaderException ex)
-                        {
-                            if (httpResponseMessage.IsSuccessStatusCode)
-                            {
-                                throw ex;
-                            }
 
-                            throw new GraphQLHttpException(httpResponseMessage);
-                        }
+                        return jsonSerializer.Deserialize<GraphQLResponse>(jsonTextReader);
                     }
                 }
             }
-
-            return graphQlResponse;
         }
 
         public void Dispose()
