@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>GraphQLClient.AWSignerExtention</RootNamespace>
+        <PackageVersion>0.0.5</PackageVersion>
+        <Title>GraphQLClient.AWSExtentions</Title>
+        <Authors>Vladimir Yarovenko &lt;yavapro@gmail.com&gt;</Authors>
+        <Description>GraphQLClient for aws server with ami authorization</Description>
+        <PackageProjectUrl>https://github.com/yavapro/GraphQLClient.Extentions</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/yavapro/GraphQLClient.Extentions.git</RepositoryUrl>
+        <PackageTags>AWS GraphQLClient Aws4RequestSigner</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Aws4RequestSigner" Version="0.8.0" />
+      <PackageReference Include="GraphQL.Client" Version="1.0.3" />
+      <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    </ItemGroup>
+
+</Project>
