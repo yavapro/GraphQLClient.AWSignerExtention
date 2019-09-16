@@ -8,13 +8,14 @@ namespace GraphQLClient.AWSExtentions
     using System.Threading.Tasks;
     using Aws4RequestSigner;
     using GraphQL.Client;
-    using GraphQL.Client.Exceptions;
     using GraphQL.Common.Request;
     using GraphQL.Common.Response;
     using Newtonsoft.Json;
 
     public class GraphQLAWSClient : IGraphQLAWSClient, IDisposable
     {
+        private const string SessionTokenHeader = "X-Amz-Security-Token";
+
         private readonly AWSOptions awsOptions;
         private readonly HttpClient httpClient;
         private readonly GraphQLClientOptions options;
@@ -62,6 +63,11 @@ namespace GraphQLClient.AWSExtentions
                         }
                     }
 
+                    if (!string.IsNullOrEmpty(awsOptions.SessionToken))
+                    {
+                        httpRequest.Headers.Add(SessionTokenHeader, awsOptions.SessionToken);
+                    }
+
                     await signer.Sign(httpRequest, awsOptions.Service, awsOptions.Region);
 
                     using (HttpResponseMessage httpResponseMessage =
@@ -81,7 +87,9 @@ namespace GraphQLClient.AWSExtentions
         {
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new GraphQLHttpException(httpResponseMessage);
+                var message = await httpResponseMessage.Content.ReadAsStringAsync();
+                throw new HttpRequestException(
+                    $"Server return unexpected error with code: {httpResponseMessage.StatusCode} ({message})");
             }
 
             using (Stream stream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))

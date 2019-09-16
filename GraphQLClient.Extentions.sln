@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQLClient.AWSExtentions", "GraphQLClient.AWSExtentions\GraphQLClient.AWSExtentions.csproj", "{20F9987F-DEDC-48E0-900E-7C2332F2A52B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQLClient.AWSExtentions.Tests", "GraphQLClient.AWSExtentions.Tests\GraphQLClient.AWSExtentions.Tests.csproj", "{79904A4D-E897-4677-A65E-83F5EE6BE8CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{20F9987F-DEDC-48E0-900E-7C2332F2A52B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F9987F-DEDC-48E0-900E-7C2332F2A52B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F9987F-DEDC-48E0-900E-7C2332F2A52B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79904A4D-E897-4677-A65E-83F5EE6BE8CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79904A4D-E897-4677-A65E-83F5EE6BE8CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79904A4D-E897-4677-A65E-83F5EE6BE8CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79904A4D-E897-4677-A65E-83F5EE6BE8CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
