@@ -1,5 +1,7 @@
 namespace GraphQLClient.AWSExtentions
 {
+    using Amazon;
+    using Amazon.Runtime;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -16,20 +18,42 @@ namespace GraphQLClient.AWSExtentions
     {
         private const string SessionTokenHeader = "X-Amz-Security-Token";
 
-        private readonly AWSOptions awsOptions;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string accessKey;
+        private readonly string secretKey;
+        private readonly string sessionToken;
+        private readonly AWSCredentials awsCredentials;
         private readonly HttpClient httpClient;
         private readonly GraphQLClientOptions options;
 
-        public GraphQLAWSClient(GraphQLClientOptions options, AWSOptions awsOptions)
+        public GraphQLAWSClient(GraphQLClientOptions options, AWSOptions awsOptions, RegionEndpoint region, string serviceName)
         {
             this.options = options;
-            this.awsOptions = awsOptions;
+            this.accessKey = awsOptions.AccessKey;
+            this.secretKey = awsOptions.SecretKey;
+            this.sessionToken = awsOptions.SessionToken;
+            this.serviceName = serviceName;
+            this.region = region.SystemName;
             this.httpClient = new HttpClient(this.options.HttpMessageHandler);
         }
 
-        public GraphQLAWSClient(Uri endPoint, AWSOptions awsOptions)
-            : this(new GraphQLClientOptions {EndPoint = endPoint}, awsOptions)
+        public GraphQLAWSClient(Uri endPoint, AWSOptions awsOptions, RegionEndpoint region, string serviceName)
+            : this(new GraphQLClientOptions {EndPoint = endPoint}, awsOptions, region, serviceName)
         {
+        }
+
+        public GraphQLAWSClient(
+            GraphQLClientOptions options,
+            AWSCredentials awsCredentials,
+            RegionEndpoint region,
+            string serviceName)
+        {
+            this.options = options;
+            this.awsCredentials = awsCredentials;
+            this.region = region.SystemName;
+            this.serviceName = serviceName;
+            this.httpClient = new HttpClient(this.options.HttpMessageHandler);
         }
 
         public async Task<GraphQLResponse> PostSignedRequestAsync(GraphQLRequest request,
@@ -44,8 +68,12 @@ namespace GraphQLClient.AWSExtentions
             CancellationToken cancellationToken)
         {
             GraphQLResponse graphQlResponse;
+            AWS4RequestSigner signer;
+            var credentials = awsCredentials?.GetCredentials();
 
-            var signer = new AWS4RequestSigner(awsOptions.AccessKey, awsOptions.SecretKey);
+            signer = credentials == null
+                ? new AWS4RequestSigner(accessKey, secretKey)
+                : new AWS4RequestSigner(credentials.AccessKey, credentials.SecretKey);
 
             using (StringContent httpContent =
                 new StringContent(JsonConvert.SerializeObject(request, this.options.JsonSerializerSettings)))
@@ -63,12 +91,19 @@ namespace GraphQLClient.AWSExtentions
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(awsOptions.SessionToken))
+                    if (credentials != null)
                     {
-                        httpRequest.Headers.Add(SessionTokenHeader, awsOptions.SessionToken);
+                        if (!string.IsNullOrEmpty(credentials.Token))
+                        {
+                            httpRequest.Headers.Add(SessionTokenHeader, credentials.Token);
+                        }
+                    }
+                    else if (!string.IsNullOrEmpty(sessionToken))
+                    {
+                        httpRequest.Headers.Add(SessionTokenHeader, sessionToken);
                     }
 
-                    await signer.Sign(httpRequest, awsOptions.Service, awsOptions.Region);
+                    await signer.Sign(httpRequest, serviceName, region);
 
                     using (HttpResponseMessage httpResponseMessage =
                         await this.httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false))

@@ -1,3 +1,5 @@
+using Amazon;
+
 namespace GraphQLClient.AWSExtentions.Tests
 {
     using GraphQL.Client;
@@ -21,13 +23,11 @@ namespace GraphQLClient.AWSExtentions.Tests
                 AccessKey = "",
                 SecretKey = "",
                 SessionToken = "",
-                Service = "",
-                Region = ""
             };
 
-            var client = new GraphQLAWSClient(graphQLOptions, awsOptions);
+            var client = new GraphQLAWSClient(graphQLOptions, awsOptions, RegionEndpoint.USEast1, "");
 
-            var request = new GraphQLRequest()
+            var request = new GraphQLRequest
             {
                 Query = ""
             };

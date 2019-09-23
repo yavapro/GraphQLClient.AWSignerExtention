@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>GraphQLClient.AWSignerExtention</RootNamespace>
-        <PackageVersion>0.0.8</PackageVersion>
+        <PackageVersion>0.0.9</PackageVersion>
         <Title>GraphQLClient.AWSExtentions</Title>
         <Authors>Vladimir Yarovenko &lt;yavapro@gmail.com&gt;</Authors>
         <Description>GraphQLClient for aws server with ami authorization</Description>
@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="Aws4RequestSigner" Version="0.8.0" />
+      <PackageReference Include="AWSSDK.Core" Version="3.3.103.42" />
       <PackageReference Include="GraphQL.Client" Version="1.0.3" />
       <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     </ItemGroup>
